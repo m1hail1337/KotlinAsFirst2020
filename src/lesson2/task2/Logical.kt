@@ -20,7 +20,7 @@ fun pointInsideCircle(x: Double, y: Double, x0: Double, y0: Double, r: Double) =
  * Определить, счастливое ли заданное число, вернуть true, если это так.
  */
 fun isNumberHappy(number: Int): Boolean =
-    (number % 10 + (((number % 100) - number % 10) / 10) == ((((number % 1000) - number % 100) / 100) + ((number - number % 1000) / 1000)))
+    (number % 10 + number / 10 % 10) == (number / 100 % 10 + number / 1000)
 
 /**
  * Простая (2 балла)
@@ -40,23 +40,10 @@ fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int): Boolean =
  * Вернуть число дней в этом месяце этого года по григорианскому календарю.
  */
 fun daysInMonth(month: Int, year: Int): Int {
-    var isYearVis = false
-    if ((year % 4 == 0) and ((year % 400 == 0) or (year % 100 != 0))) {
-        isYearVis = true
-    }
-    return when {
-        month == 1 -> 31
-        month == 3 -> 31
-        month == 4 -> 30
-        month == 5 -> 31
-        month == 6 -> 30
-        month == 7 -> 31
-        month == 8 -> 31
-        month == 9 -> 30
-        month == 10 -> 31
-        month == 11 -> 30
-        month == 12 -> 31
-        isYearVis -> 29
+    return if ((month == 2) && (year % 4 == 0) && ((year % 400 == 0) || (year % 100 != 0))) 29
+    else when (month) {
+        1, 3, 5, 7, 8, 10, 12 -> 31
+        4, 6, 9, 11 -> 30
         else -> 28
     }
 }
@@ -71,13 +58,7 @@ fun daysInMonth(month: Int, year: Int): Int {
 fun circleInside(
     x1: Double, y1: Double, r1: Double,
     x2: Double, y2: Double, r2: Double,
-): Boolean {
-    if ((x2 + r2 > x1 + r1) and (x2 - r2 < x1 - r1) and (y2 + r2 > y1 + r1) and (y2 - r2 < y1 - r1)) return true
-    else if ((x2 + r2 == x1 + r1) and (x1 <= x2 + r2 - r1) and ((x1 == x2) or (y1 == y2))) return true
-    else if ((x2 - r2 == x1 - r1) and (x1 >= x2 - r2 + r1) and ((x1 == x2) or (y1 == y2))) return true
-    else if ((y2 + r2 == y1 + r1) and (y1 <= y2 + r2 - r1) and ((x1 == x2) or (y1 == y2))) return true
-    else return (y2 - r2 == y1 - r1) and (y1 >= y2 - r2 + r1) and ((x1 == x2) or (y1 == y2))
-}
+): Boolean = (r1 <= r2) && sqr(r2 - r1) >= sqr(x2 - x1) + sqr(y2 - y1)
 
 
 /**
@@ -89,5 +70,11 @@ fun circleInside(
  * кирпич 4 х 4 х 4 пройдёт через отверстие 4 х 4.
  * Вернуть true, если кирпич пройдёт
  */
-fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int): Boolean =
-    ((r >= a) and (s >= b)) or ((r >= a) and (s >= c)) or ((r >= b) and (s >= a)) or ((r >= b) and (s >= c)) or ((r >= c) and (s >= a)) or ((r >= c) and (s >= b))
+fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int): Boolean {
+    val side1 = maxOf(a, b, c)
+    val side2 = minOf(a, b, c)
+    val side3 = a + b + c - side1 - side2
+    return (side2 <= r && side3 <= s || side2 <= s && side3 <= r)
+
+}
+//((r >= a) and (s >= b)) or ((r >= a) and (s >= c)) or ((r >= b) and (s >= a)) or ((r >= b) and (s >= c)) or ((r >= c) and (s >= a)) or ((r >= c) and (s >= b))
