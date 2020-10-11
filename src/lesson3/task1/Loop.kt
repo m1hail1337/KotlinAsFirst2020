@@ -256,9 +256,9 @@ fun sin(x: Double, eps: Double): Double {
         iters++
         f += 2
         member = x.pow(f) / factorial(f) * (-1.0).pow(iters)
-        //println(member)
         result += member
-        //println("rez:$result")
+        //не проходит тест с PI*100
+
     }
     return result
 }
