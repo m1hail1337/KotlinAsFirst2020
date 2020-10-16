@@ -281,9 +281,7 @@ fun cos(x: Double, eps: Double): Double {
         iters++
         f += 2
         member = x.pow(f) / factorial(f) * (-1.0).pow(iters)
-        //println(member)
         result += member
-        //println("rez:$result")
     }
     return result
 }
@@ -297,7 +295,17 @@ fun cos(x: Double, eps: Double): Double {
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun squareSequenceDigit(n: Int): Int = TODO()
+fun squareSequenceDigit(n: Int): Int {
+    var x = 1
+    var count = 0
+    var number = 0
+    while (count < n) {
+        count += digitNumber(x * x)
+        number = x * x
+        x++
+    }
+    return number / 10.0.pow(count - n).toInt() % 10
+}
 
 /**
  * Сложная (5 баллов)
@@ -308,4 +316,14 @@ fun squareSequenceDigit(n: Int): Int = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun fibSequenceDigit(n: Int): Int = TODO()
+fun fibSequenceDigit(n: Int): Int {
+    var x = 1
+    var count = 0
+    var number = 0
+    while (count < n) {
+        count += digitNumber(fib(x))
+        number = fib(x)
+        x++
+    }
+    return number / 10.0.pow(count - n).toInt() % 10
+}
