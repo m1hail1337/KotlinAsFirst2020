@@ -2,7 +2,7 @@
 
 package lesson3.task1
 
-import lesson1.task1.sqr
+import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.pow
 import kotlin.math.sqrt
@@ -81,7 +81,7 @@ fun digitNumber(n: Int): Int {
     do {
         count++
         number /= 10
-    } while (number > 0)
+    } while (abs(number) > 0)
     return count
 }
 
@@ -91,7 +91,21 @@ fun digitNumber(n: Int): Int {
  * Найти число Фибоначчи из ряда 1, 1, 2, 3, 5, 8, 13, 21, ... с номером n.
  * Ряд Фибоначчи определён следующим образом: fib(1) = 1, fib(2) = 1, fib(n+2) = fib(n) + fib(n+1)
  */
-fun fib(n: Int): Int = if (n > 2) fib(n - 1) + fib(n - 2) else 1
+fun fib(n: Int): Int {
+    var x = 1
+    var i = 2
+    var y = 1
+    var ans = 0
+    if (n < 3) ans = 1
+    else while (i != n) {
+        ans = x + y
+        x = y
+        y = ans
+        i++
+    }
+    return ans
+
+}
 
 /**
  * Простая (2 балла)
@@ -102,6 +116,10 @@ fun minDivisor(n: Int): Int {
     var i = 2
     while (n % i != 0) {
         i++
+        if (i > n / 2) {
+            i = n
+            break
+        }
     }
     return i
 }
@@ -111,13 +129,7 @@ fun minDivisor(n: Int): Int {
  *
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
-fun maxDivisor(n: Int): Int {
-    var i = n - 1
-    while (n % i != 0) {
-        i--
-    }
-    return i
-}
+fun maxDivisor(n: Int): Int = if (minDivisor(n) != n) n / minDivisor(n) else 1
 
 
 /**
@@ -154,11 +166,13 @@ fun collatzSteps(x: Int): Int {
  * минимальное число k, которое делится и на m и на n без остатка
  */
 fun lcm(m: Int, n: Int): Int {
-    var k = maxOf(m, n)
-    while (k % m != 0 || k % n != 0) {
+    val max = maxOf(m, n)
+    val min = minOf(m, n)
+    var k = 1
+    while (max * k % min != 0) {
         k++
     }
-    return k
+    return k * max
 }
 
 /**
@@ -169,8 +183,10 @@ fun lcm(m: Int, n: Int): Int {
  * Например, 25 и 49 взаимно простые, а 6 и 8 -- нет.
  */
 fun isCoPrime(m: Int, n: Int): Boolean {
-    var k = minOf(m, n)
-    while (m % k != 0 || n % k != 0) {
+    val max = maxOf(m, n)
+    val min = minOf(m, n)
+    var k = min
+    while (min % k != 0 || max % k != 0) {
         k--
     }
     return k == 1
@@ -185,8 +201,8 @@ fun isCoPrime(m: Int, n: Int): Boolean {
  */
 fun squareBetweenExists(m: Int, n: Int): Boolean {
     var result = false
-    for (i in 0..m) {
-        if (sqr(i) in m..n) {
+    for (i in 0..n) {
+        if (i * i in m..n) {
             result = true
             break
         }
@@ -237,7 +253,19 @@ fun isPalindrome(n: Int): Boolean = revert(n) == n
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun hasDifferentDigits(n: Int): Boolean = TODO()
+fun hasDifferentDigits(n: Int): Boolean {
+    var result = false
+    val last = n % 10
+    var number = n
+    while (number > 0 || result) {
+        if (last != number % 10) {
+            result = true
+            break
+        }
+        number /= 10
+    }
+    return result
+}
 /**
  * Средняя (4 балла)
  *
@@ -249,13 +277,17 @@ fun hasDifferentDigits(n: Int): Boolean = TODO()
  */
 fun sin(x: Double, eps: Double): Double {
     var member = 1.0
-    var result = x
+    var newX = x
     var f = 1
     var iters = 0
+    while (newX > 2 * PI) {
+        newX -= 2 * PI
+    }
+    var result = newX
     while (abs(member) >= abs(eps)) {
         iters++
         f += 2
-        member = x.pow(f) / factorial(f) * (-1.0).pow(iters)
+        member = newX.pow(f) / factorial(f) * (-1.0).pow(iters)
         result += member
         //не проходит тест с PI*100
 
@@ -277,11 +309,16 @@ fun cos(x: Double, eps: Double): Double {
     var result = 1.0
     var f = 0
     var iters = 0
+    var newX = x
+    while (newX > 2 * PI) {
+        newX -= 2 * PI
+    }
     while (abs(member) >= abs(eps)) {
         iters++
         f += 2
-        member = x.pow(f) / factorial(f) * (-1.0).pow(iters)
+        member = newX.pow(f) / factorial(f) * (-1.0).pow(iters)
         result += member
+
     }
     return result
 }
