@@ -114,14 +114,11 @@ fun fib(n: Int): Int {
  */
 fun minDivisor(n: Int): Int {
     var i = 2
-    while (n % i != 0) {
+    while (i <= sqrt(n.toDouble())) {
+        if (n % i == 0) break
         i++
-        if (i > n / 2) {
-            i = n
-            break
-        }
     }
-    return i
+    return if (i != n) i else n
 }
 
 /**
@@ -129,7 +126,7 @@ fun minDivisor(n: Int): Int {
  *
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
-fun maxDivisor(n: Int): Int = if (minDivisor(n) != n) n / minDivisor(n) else 1
+fun maxDivisor(n: Int): Int = n / minDivisor(n)
 
 
 /**
@@ -169,9 +166,7 @@ fun lcm(m: Int, n: Int): Int {
     val max = maxOf(m, n)
     val min = minOf(m, n)
     var k = 1
-    while (max * k % min != 0) {
-        k++
-    }
+    while (max * k % min != 0) k++
     return k * max
 }
 
@@ -182,15 +177,7 @@ fun lcm(m: Int, n: Int): Int {
  * Взаимно простые числа не имеют общих делителей, кроме 1.
  * Например, 25 и 49 взаимно простые, а 6 и 8 -- нет.
  */
-fun isCoPrime(m: Int, n: Int): Boolean {
-    val max = maxOf(m, n)
-    val min = minOf(m, n)
-    var k = min
-    while (min % k != 0 || max % k != 0) {
-        k--
-    }
-    return k == 1
-}
+fun isCoPrime(m: Int, n: Int): Boolean = lcm(m, n) == m * n
 
 /**
  * Средняя (3 балла)
@@ -201,7 +188,7 @@ fun isCoPrime(m: Int, n: Int): Boolean {
  */
 fun squareBetweenExists(m: Int, n: Int): Boolean {
     var result = false
-    for (i in 0..n) {
+    for (i in m downTo 0) {
         if (i * i in m..n) {
             result = true
             break
@@ -220,18 +207,13 @@ fun squareBetweenExists(m: Int, n: Int): Boolean {
 fun revert(n: Int): Int {
     var number = n
     var result = 0
-    var multiplier = 1
-    while (number > 10) {
-        multiplier *= 10
-        number /= 10
-    }
-    number = n
-    while (number > 0) {
+    var multiplier = 10.0.pow(digitNumber(n)).toInt()
+    while (number > 9) {
         result += number % 10 * multiplier
         number /= 10
         multiplier /= 10
     }
-    return result
+    return (result + number % 10 * multiplier) / 10
 }
 
 /**
@@ -266,6 +248,7 @@ fun hasDifferentDigits(n: Int): Boolean {
     }
     return result
 }
+
 /**
  * Средняя (4 балла)
  *
@@ -275,24 +258,24 @@ fun hasDifferentDigits(n: Int): Boolean {
  * Подумайте, как добиться более быстрой сходимости ряда при больших значениях x.
  * Использовать kotlin.math.sin и другие стандартные реализации функции синуса в этой задаче запрещается.
  */
-fun sin(x: Double, eps: Double): Double {
+fun trigonometrySolver(x: Double, eps: Double, fact: Int): Double {
     var member = 1.0
-    var newX = x
-    var f = 1
+    val newX = x % (2 * PI)
+    var f = fact
+    var result = if (fact == 1) newX else 1.0
     var iters = 0
-    while (newX > 2 * PI) {
-        newX -= 2 * PI
-    }
-    var result = newX
     while (abs(member) >= abs(eps)) {
         iters++
         f += 2
         member = newX.pow(f) / factorial(f) * (-1.0).pow(iters)
         result += member
-        //не проходит тест с PI*100
-
     }
     return result
+}
+
+fun sin(x: Double, eps: Double): Double {
+    val fact = 1
+    return trigonometrySolver(x, eps, fact)
 }
 
 /**
@@ -303,24 +286,10 @@ fun sin(x: Double, eps: Double): Double {
  * Нужную точность считать достигнутой, если очередной член ряда меньше eps по модулю
  * Подумайте, как добиться более быстрой сходимости ряда при больших значениях x.
  * Использовать kotlin.math.cos и другие стандартные реализации функции косинуса в этой задаче запрещается.
- */
+ * */
 fun cos(x: Double, eps: Double): Double {
-    var member = 1.0
-    var result = 1.0
-    var f = 0
-    var iters = 0
-    var newX = x
-    while (newX > 2 * PI) {
-        newX -= 2 * PI
-    }
-    while (abs(member) >= abs(eps)) {
-        iters++
-        f += 2
-        member = newX.pow(f) / factorial(f) * (-1.0).pow(iters)
-        result += member
-
-    }
-    return result
+    val fact = 0
+    return trigonometrySolver(x, eps, fact)
 }
 
 /**
@@ -332,17 +301,18 @@ fun cos(x: Double, eps: Double): Double {
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun squareSequenceDigit(n: Int): Int {
+fun sequenceSolver(n: Int, arg: String): Int {
     var x = 1
     var count = 0
     var number = 0
     while (count < n) {
-        count += digitNumber(x * x)
-        number = x * x
+        count += digitNumber(if (arg == "sq") x * x else fib(x))
+        number = if (arg == "sq") x * x else fib(x)
         x++
     }
     return number / 10.0.pow(count - n).toInt() % 10
 }
+fun squareSequenceDigit(n: Int): Int = sequenceSolver(n, "sq")
 
 /**
  * Сложная (5 баллов)
@@ -353,14 +323,4 @@ fun squareSequenceDigit(n: Int): Int {
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun fibSequenceDigit(n: Int): Int {
-    var x = 1
-    var count = 0
-    var number = 0
-    while (count < n) {
-        count += digitNumber(fib(x))
-        number = fib(x)
-        x++
-    }
-    return number / 10.0.pow(count - n).toInt() % 10
-}
+fun fibSequenceDigit(n: Int): Int = sequenceSolver(n, "fib")
