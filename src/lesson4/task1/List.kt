@@ -3,6 +3,7 @@
 package lesson4.task1
 
 import lesson1.task1.discriminant
+import lesson3.task1.digitNumber
 import lesson3.task1.minDivisor
 import kotlin.math.sqrt
 import kotlin.math.pow
@@ -122,7 +123,7 @@ fun buildSumExample(list: List<Int>) = list.joinToString(separator = " + ", post
  * по формуле abs = sqrt(a1^2 + a2^2 + ... + aN^2).
  * Модуль пустого вектора считать равным 0.0.
  */
-fun abs(v: List<Double>): Double = sqrt(v.fold(0.0) { now, next -> now * now + next })
+fun abs(v: List<Double>): Double = sqrt(v.map { it * it }.sum())
 
 /**
  * Простая (2 балла)
@@ -143,7 +144,11 @@ fun mean(list: List<Double>): Double {
  * Обратите внимание, что данная функция должна изменять содержание списка list, а не его копии.
  */
 fun center(list: MutableList<Double>): MutableList<Double> {
-    if (list.isNotEmpty()) for (i in 0 until list.size) list[i] -= mean(list)
+    val mean = mean(list)
+    for (i in 0 until list.size) {
+        list.add(i, list[i] - mean)
+        list.removeAt(i + 1)
+    }
     return list
 }
 
@@ -262,7 +267,34 @@ fun convert(n: Int, base: Int): List<Int> {
  */
 fun convertToString(n: Int, base: Int): String {
     val list = convert(n, base)
-    val listLetters = listOf("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z")
+    val listLetters = listOf(
+        "a",
+        "b",
+        "c",
+        "d",
+        "e",
+        "f",
+        "g",
+        "h",
+        "i",
+        "j",
+        "k",
+        "l",
+        "m",
+        "n",
+        "o",
+        "p",
+        "q",
+        "r",
+        "s",
+        "t",
+        "u",
+        "v",
+        "w",
+        "x",
+        "y",
+        "z"
+    )
     val resultList = mutableListOf<String>()
     for (i in list.indices) {
         if (list[i] > 9) resultList.add(listLetters[list[i] - 10])
@@ -301,11 +333,38 @@ fun decimal(digits: List<Int>, base: Int): Int {
  * (например, str.toInt(base)), запрещается.
  */
 fun decimalFromString(str: String, base: Int): Int {
-    val listLetters = listOf("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z")
+    val listLetters = listOf(
+        "a",
+        "b",
+        "c",
+        "d",
+        "e",
+        "f",
+        "g",
+        "h",
+        "i",
+        "j",
+        "k",
+        "l",
+        "m",
+        "n",
+        "o",
+        "p",
+        "q",
+        "r",
+        "s",
+        "t",
+        "u",
+        "v",
+        "w",
+        "x",
+        "y",
+        "z"
+    )
     val resultList = mutableListOf<Int>()
     for (i in str) {
-        if (i in listLetters) resultList.add(listLetters.indexOf(i.toString()) + 10)
-        else resultList.add(i.toInt())
+        if (i.toString() in listLetters) resultList.add(listLetters.indexOf(i.toString()) + 10)
+        else resultList.add(i.toString().toInt())
     }
     return decimal(resultList, base)
 }
@@ -318,9 +377,57 @@ fun decimalFromString(str: String, base: Int): Int {
  * 90 = XC, 100 = C, 400 = CD, 500 = D, 900 = CM, 1000 = M.
  * Например: 23 = XXIII, 44 = XLIV, 100 = C
  */
+
 fun roman(n: Int): String {
-    val romanChars = listOf("I","V","X","L","C","D","M")
-    return "ss"
+    //val romanChars = listOf("I", "V", "X", "L", "C", "D", "M")
+    val ans = mutableListOf<String>()
+    fun constructor(k: Int, arg: String) {
+        for (i in 0 until k)
+            ans.add(ans.size, arg)
+
+    }
+
+    val m1 = n / 1000
+    constructor(m1, "M")
+    var m2 = n % 1000
+    if (m2 / 100 == 9) {
+        ans.add(ans.size, "CM")
+        m2 = -1
+    } else if (m2 / 100 == 4) {
+        ans.add(ans.size, "CM")
+        m2 = -1
+    }
+
+    val d1 = m2 / 500
+    constructor(d1, "D")
+    val d2 = m2 % 500
+    val c1 = d2 / 100
+    constructor(c1, "C")
+    var c2 = n % 100
+    if (c2 / 10 == 9) {
+        ans.add(ans.size, "XC")
+        c2 = -1
+    } else if (c2 / 10 == 4) {
+        ans.add(ans.size, "XL")
+        c2 = -1
+    }
+    val l1 = c2 / 50
+    constructor(l1, "L")
+    val l2 = c2 % 50
+    val x1 = l2 / 10
+    constructor(x1, "X")
+    var x2 = n % 10
+    if (x2 % 10 == 9) {
+        ans.add(ans.size, "IX")
+        x2 = -1
+    } else if (x2 % 10 == 4) {
+        ans.add(ans.size, "IV")
+        x2 = -1
+    }
+    val v1 = x2 / 5
+    constructor(v1, "V")
+    constructor(x2 % 5, "I")
+    return ans.joinToString("")
 }
 
 /**
@@ -330,4 +437,17 @@ fun roman(n: Int): String {
  * Например, 375 = "триста семьдесят пять",
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
-fun russian(n: Int): String = TODO()
+fun russian(n: Int): String {
+    val k = digitNumber(n)
+    val categoryOfUnits = listOf<String>("один", "два", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять")
+    val result = ""
+    var number = n
+    var digit = 0
+
+    for (i in 0 until k) {
+        digit = number % 10
+        //result.add(categoryOfUnits[digit - 1])
+
+    }
+    return result//.joinToString(separator = " ")
+}

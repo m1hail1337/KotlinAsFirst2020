@@ -114,11 +114,15 @@ fun fib(n: Int): Int {
  */
 fun minDivisor(n: Int): Int {
     var i = 2
+    var prime = true
     while (i <= sqrt(n.toDouble())) {
-        if (n % i == 0) break
+        if (n % i == 0) {
+            prime = false
+            break
+        }
         i++
     }
-    return if (i != n) i else n
+    return if (prime) n else i
 }
 
 /**
