@@ -74,7 +74,24 @@ fun main() {
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30.02.2009) считается неверными
  * входными данными.
  */
-fun dateStrToDigit(str: String): String = TODO()
+fun dateStrToDigit(str: String): String {
+    var result = str.split(" ").toMutableList()
+    when (result[1]) {
+        "января" -> result[1] = "01"
+        "февраля" -> result[1] = "02"
+        "марта" -> result[1] = "03"
+        "апреля" -> result[1] = "04"
+        "мая" -> result[1] = "05"
+        "июня" -> result[1] = "06"
+        "июля" -> result[1] = "07"
+        "августа" -> result[1] = "08"
+        "сентября" -> result[1] = "09"
+        "октября" -> result[1] = "10"
+        "ноября" -> result[1] = "11"
+        "декабря" -> result[1] = "12"
+    }
+    return result.joinToString(".")
+}
 
 /**
  * Средняя (4 балла)
