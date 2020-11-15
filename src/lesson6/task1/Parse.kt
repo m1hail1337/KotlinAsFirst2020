@@ -2,6 +2,8 @@
 
 package lesson6.task1
 
+import lesson2.task2.daysInMonth
+
 // Урок 6: разбор строк, исключения
 // Максимальное количество баллов = 13
 // Рекомендуемое количество баллов = 11
@@ -75,20 +77,33 @@ fun main() {
  * входными данными.
  */
 fun dateStrToDigit(str: String): String {
-    var result = str.split(" ").toMutableList()
-    when (result[1]) {
-        "января" -> result[1] = "01"
-        "февраля" -> result[1] = "02"
-        "марта" -> result[1] = "03"
-        "апреля" -> result[1] = "04"
-        "мая" -> result[1] = "05"
-        "июня" -> result[1] = "06"
-        "июля" -> result[1] = "07"
-        "августа" -> result[1] = "08"
-        "сентября" -> result[1] = "09"
-        "октября" -> result[1] = "10"
-        "ноября" -> result[1] = "11"
-        "декабря" -> result[1] = "12"
+    val result = str.split(" ").toMutableList()
+    try {
+
+        result[2].toInt()
+        if (result[0].toInt() < 10) {
+            result[0] = "0" + result[0]
+        }
+        when (result[1]) {
+            "января" -> result[1] = "01"
+            "февраля" -> result[1] = "02"
+            "марта" -> result[1] = "03"
+            "апреля" -> result[1] = "04"
+            "мая" -> result[1] = "05"
+            "июня" -> result[1] = "06"
+            "июля" -> result[1] = "07"
+            "августа" -> result[1] = "08"
+            "сентября" -> result[1] = "09"
+            "октября" -> result[1] = "10"
+            "ноября" -> result[1] = "11"
+            "декабря" -> result[1] = "12"
+            else -> return ""
+        }
+        if (result[0].toInt() > daysInMonth(result[1].toInt(), result[2].toInt()) || result.size != 3) return ""
+    } catch (a: NumberFormatException) {
+        return ""
+    } catch (b: IndexOutOfBoundsException) {
+        return ""
     }
     return result.joinToString(".")
 }
@@ -103,7 +118,37 @@ fun dateStrToDigit(str: String): String {
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30 февраля 2009) считается неверными
  * входными данными.
  */
-fun dateDigitToStr(digital: String): String = TODO()
+fun dateDigitToStr(digital: String): String {
+    val result = digital.split(".").toMutableList()
+    try {
+        result[2].toInt()
+        if (result[0].toInt() < 10) {
+            result[0] = result[0].last().toString()
+        }
+        if (result[0].toInt() > daysInMonth(result[1].toInt(), result[2].toInt()) || result.size != 3) return ""
+        when (result[1]) {
+            "01" -> result[1] = "января"
+            "02" -> result[1] = "февраля"
+            "03" -> result[1] = "марта"
+            "04" -> result[1] = "апреля"
+            "05" -> result[1] = "мая"
+            "06" -> result[1] = "июня"
+            "07" -> result[1] = "июля"
+            "08" -> result[1] = "августа"
+            "09" -> result[1] = "сентября"
+            "10" -> result[1] = "октября"
+            "11" -> result[1] = "ноября"
+            "12" -> result[1] = "декабря"
+            else -> return ""
+        }
+    } catch (a: NumberFormatException) {
+        return ""
+    } catch (b: IndexOutOfBoundsException) {
+        return ""
+    }
+    return result.joinToString(" ")
+}
+
 
 /**
  * Средняя (4 балла)
@@ -166,7 +211,17 @@ fun plusMinus(expression: String): Int = TODO()
  * Вернуть индекс начала первого повторяющегося слова, или -1, если повторов нет.
  * Пример: "Он пошёл в в школу" => результат 9 (индекс первого 'в')
  */
-fun firstDuplicateIndex(str: String): Int = TODO()
+fun firstDuplicateIndex(str: String): Int {
+    var first = 0
+    val words = str.toLowerCase().split(" ")
+    for (word in 0 until words.size - 1) {
+        if (words[word] == words[word + 1]) {
+            return first
+        }
+        first += words[word].length + 1
+    }
+    return -1
+}
 
 /**
  * Сложная (6 баллов)
