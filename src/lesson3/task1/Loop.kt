@@ -114,15 +114,11 @@ fun fib(n: Int): Int {
  */
 fun minDivisor(n: Int): Int {
     var i = 2
-    var prime = true
-    while (i <= sqrt(n.toDouble())) {
-        if (n % i == 0) {
-            prime = false
-            break
-        }
-        i++
+    return if (isPrime(n)) n
+    else {
+        while (i <= sqrt(n.toDouble()) && n % i != 0) i++
+        i
     }
-    return if (prime) n else i
 }
 
 /**
@@ -243,7 +239,7 @@ fun hasDifferentDigits(n: Int): Boolean {
     var result = false
     val last = n % 10
     var number = n
-    while (number > 0 || result) {
+    while (number > 0) {
         if (last != number % 10) {
             result = true
             break
@@ -305,18 +301,18 @@ fun cos(x: Double, eps: Double): Double {
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun sequenceSolver(n: Int, arg: String): Int {
+fun sequenceSolver(n: Int, isSquareSequence: Boolean): Int {
     var x = 1
     var count = 0
     var number = 0
     while (count < n) {
-        count += digitNumber(if (arg == "sq") x * x else fib(x))
-        number = if (arg == "sq") x * x else fib(x)
+        count += digitNumber(if (isSquareSequence) x * x else fib(x))
+        number = if (isSquareSequence) x * x else fib(x)
         x++
     }
     return number / 10.0.pow(count - n).toInt() % 10
 }
-fun squareSequenceDigit(n: Int): Int = sequenceSolver(n, "sq")
+fun squareSequenceDigit(n: Int): Int = sequenceSolver(n, true)
 
 /**
  * Сложная (5 баллов)
@@ -327,4 +323,4 @@ fun squareSequenceDigit(n: Int): Int = sequenceSolver(n, "sq")
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun fibSequenceDigit(n: Int): Int = sequenceSolver(n, "fib")
+fun fibSequenceDigit(n: Int): Int = sequenceSolver(n, false)

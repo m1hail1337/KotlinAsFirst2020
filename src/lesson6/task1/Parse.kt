@@ -79,26 +79,23 @@ fun main() {
 fun dateStrToDigit(str: String): String {
     val result = str.split(" ").toMutableList()
     try {
-
+        result[0] = twoDigitStr(result[0].toInt())
         result[2].toInt()
-        if (result[0].toInt() < 10) {
-            result[0] = "0" + result[0]
-        }
-        when (result[1]) {
-            "января" -> result[1] = "01"
-            "февраля" -> result[1] = "02"
-            "марта" -> result[1] = "03"
-            "апреля" -> result[1] = "04"
-            "мая" -> result[1] = "05"
-            "июня" -> result[1] = "06"
-            "июля" -> result[1] = "07"
-            "августа" -> result[1] = "08"
-            "сентября" -> result[1] = "09"
-            "октября" -> result[1] = "10"
-            "ноября" -> result[1] = "11"
-            "декабря" -> result[1] = "12"
-            else -> return ""
-        }
+        val mapOfMonth = mapOf<String, String>(
+            "января" to "01",
+            "февраля" to "02",
+            "марта" to "03",
+            "апреля" to "04",
+            "мая" to "05",
+            "июня" to "06",
+            "июля" to "07",
+            "августа" to "08",
+            "сентября" to "09",
+            "октября" to "10",
+            "ноября" to "11",
+            "декабря" to "12"
+        )
+        if (mapOfMonth.containsKey(result[1])) result[1] = mapOfMonth[result[1]] ?: return ("")
         if (result[0].toInt() > daysInMonth(result[1].toInt(), result[2].toInt()) || result.size != 3) return ""
     } catch (a: NumberFormatException) {
         return ""
@@ -121,26 +118,24 @@ fun dateStrToDigit(str: String): String {
 fun dateDigitToStr(digital: String): String {
     val result = digital.split(".").toMutableList()
     try {
+        result[0] = result[0].toInt().toString()
         result[2].toInt()
-        if (result[0].toInt() < 10) {
-            result[0] = result[0].last().toString()
-        }
         if (result[0].toInt() > daysInMonth(result[1].toInt(), result[2].toInt()) || result.size != 3) return ""
-        when (result[1]) {
-            "01" -> result[1] = "января"
-            "02" -> result[1] = "февраля"
-            "03" -> result[1] = "марта"
-            "04" -> result[1] = "апреля"
-            "05" -> result[1] = "мая"
-            "06" -> result[1] = "июня"
-            "07" -> result[1] = "июля"
-            "08" -> result[1] = "августа"
-            "09" -> result[1] = "сентября"
-            "10" -> result[1] = "октября"
-            "11" -> result[1] = "ноября"
-            "12" -> result[1] = "декабря"
-            else -> return ""
-        }
+        val mapOfMonth = mapOf(
+            "января" to "01",
+            "февраля" to "02",
+            "марта" to "03",
+            "апреля" to "04",
+            "мая" to "05",
+            "июня" to "06",
+            "июля" to "07",
+            "августа" to "08",
+            "сентября" to "09",
+            "октября" to "10",
+            "ноября" to "11",
+            "декабря" to "12"
+        ).map { it.value to it.key }.toMap()
+        result[1] = mapOfMonth.getOrElse(result[1]) { return "" }
     } catch (a: NumberFormatException) {
         return ""
     } catch (b: IndexOutOfBoundsException) {
