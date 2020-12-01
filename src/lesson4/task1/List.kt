@@ -5,6 +5,7 @@ package lesson4.task1
 import lesson1.task1.discriminant
 import lesson3.task1.digitNumber
 import lesson3.task1.minDivisor
+import lesson9.task2.sumNeighbours
 import kotlin.math.sqrt
 import kotlin.math.pow
 
@@ -130,10 +131,8 @@ fun abs(v: List<Double>): Double = sqrt(v.map { it * it }.sum())
  *
  * Рассчитать среднее арифметическое элементов списка list. Вернуть 0.0, если список пуст
  */
-fun mean(list: List<Double>): Double {
-    return if (list.isEmpty()) 0.0
-    else list.sum() / list.size
-}
+fun mean(list: List<Double>): Double = if (list.isEmpty()) 0.0 else list.average()
+
 
 /**
  * Средняя (3 балла)
@@ -145,10 +144,7 @@ fun mean(list: List<Double>): Double {
  */
 fun center(list: MutableList<Double>): MutableList<Double> {
     val mean = mean(list)
-    for (i in 0 until list.size) {
-        list.add(i, list[i] - mean)
-        list.removeAt(i + 1)
-    }
+    list.replaceAll { it - mean }
     return list
 }
 
@@ -160,13 +156,9 @@ fun center(list: MutableList<Double>): MutableList<Double> {
  * C = a1b1 + a2b2 + ... + aNbN. Произведение пустых векторов считать равным 0.
  */
 fun times(a: List<Int>, b: List<Int>): Int {
-    var c = 0
-    var i = 0
-    while (a.size != i) {
-        c += a[i] * b[i]
-        i++
-    }
-    return c
+    var result = 0
+    for (i in a.indices) result += a[i] * b[i]
+    return result
 }
 
 /**
@@ -179,11 +171,7 @@ fun times(a: List<Int>, b: List<Int>): Int {
  */
 fun polynom(p: List<Int>, x: Int): Int {
     var result = 0
-    var i = 0
-    while (i != p.size) {
-        result += p[i] * x.toDouble().pow(i).toInt()
-        i++
-    }
+    for (i in p.indices) result += p[i] * x.toDouble().pow(i).toInt()
     return result
 }
 
@@ -198,15 +186,12 @@ fun polynom(p: List<Int>, x: Int): Int {
  * Обратите внимание, что данная функция должна изменять содержание списка list, а не его копии.
  */
 fun accumulate(list: MutableList<Int>): MutableList<Int> {
-    var k = 0
-    var i = list.size - 1
-    while (i > 0) {
-        while (i != k) {
-            list[i] += list[k]
-            k++
+    if (list.isNotEmpty()) {
+        var sum = 0
+        for (i in list.indices) {
+            sum += list[i]
+            list[i] = sum
         }
-        i--
-        k = 0
     }
     return list
 }
@@ -247,11 +232,11 @@ fun factorizeToString(n: Int): String = factorize(n).joinToString(separator = "*
 fun convert(n: Int, base: Int): List<Int> {
     val list = mutableListOf<Int>()
     var newN = n
-    while (newN > 0) {
-        list.add(0, newN % base)
+    do {
+        list.add(newN % base)
         newN /= base
-    }
-    return list
+    } while (newN > 0)
+    return list.reversed()
 }
 
 /**
@@ -267,37 +252,9 @@ fun convert(n: Int, base: Int): List<Int> {
  */
 fun convertToString(n: Int, base: Int): String {
     val list = convert(n, base)
-    val listLetters = listOf(
-        "a",
-        "b",
-        "c",
-        "d",
-        "e",
-        "f",
-        "g",
-        "h",
-        "i",
-        "j",
-        "k",
-        "l",
-        "m",
-        "n",
-        "o",
-        "p",
-        "q",
-        "r",
-        "s",
-        "t",
-        "u",
-        "v",
-        "w",
-        "x",
-        "y",
-        "z"
-    )
     val resultList = mutableListOf<String>()
     for (i in list.indices) {
-        if (list[i] > 9) resultList.add(listLetters[list[i] - 10])
+        if (list[i] > 9) resultList.add(('a' + list[i] - 10).toString())
         else resultList.add(list[i].toString())
     }
     return resultList.joinToString(separator = "")
@@ -437,17 +394,4 @@ fun roman(n: Int): String {
  * Например, 375 = "триста семьдесят пять",
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
-fun russian(n: Int): String {
-    val k = digitNumber(n)
-    val categoryOfUnits = listOf<String>("один", "два", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять")
-    val result = ""
-    var number = n
-    var digit = 0
-
-    for (i in 0 until k) {
-        digit = number % 10
-        //result.add(categoryOfUnits[digit - 1])
-
-    }
-    return result//.joinToString(separator = " ")
-}
+fun russian(n: Int): String = TODO()

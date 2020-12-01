@@ -152,17 +152,8 @@ fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>) {
  * В выходном списке не должно быть повторяюихся элементов,
  * т. е. whoAreInBoth(listOf("Марат", "Семён, "Марат"), listOf("Марат", "Марат")) == listOf("Марат")
  */
-fun largestList(a: List<String>, b: List<String>): List<String> = if (a.size > b.size) a else b
-//fun largestMap(a: Map<String, String>, b: Map<String, String>): Map<String, String> = if (a.size > b.size) a else b
 
-fun smallestList(a: List<String>, b: List<String>): List<String> = if (a.size < b.size) a else b
-//fun smallestMap(a: Map<String, String>, b: Map<String, String>): Map<String, String> = if (a.size < b.size) a else b
-
-fun whoAreInBoth(a: List<String>, b: List<String>): List<String> {
-    val result = mutableSetOf<String>()
-    for (i in largestList(a, b)) if (i in smallestList(a, b)) result.add(i)
-    return result.toList()
-}
+fun whoAreInBoth(a: List<String>, b: List<String>): List<String> = TODO()
 
 /**
  * Средняя (3 балла)
@@ -181,14 +172,7 @@ fun whoAreInBoth(a: List<String>, b: List<String>): List<String> {
  *     mapOf("Emergency" to "911", "Police" to "02")
  *   ) -> mapOf("Emergency" to "112, 911", "Police" to "02")
  */
-fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<String, String> {
-    val result = mapA.toMutableMap()
-    for ((keyB, valueB) in mapB) {
-        if (result.containsKey(keyB) && result[keyB] != valueB) result[keyB] += ", $valueB"
-        else result.put(keyB, valueB)
-    }
-    return result
-}
+fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<String, String> = TODO()
 
 /**
  * Средняя (4 балла)
@@ -223,19 +207,7 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
  *     "печенье"
  *   ) -> "Мария"
  */
-fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): String? {
-    var maxValue = Double.MAX_VALUE
-    var result: String? = null
-    for ((key1, value1) in stuff) {
-        val key2 = value1.first
-        val value2 = value1.second
-        if (value2 < maxValue && key2 == kind) {
-            result = key1
-            maxValue = value2
-        }
-    }
-    return result
-}
+fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): String? = TODO()
 
 /**
  * Средняя (3 балла)
@@ -279,19 +251,7 @@ fun extractRepeats(list: List<String>): Map<String, Int> {
  * Например:
  *   hasAnagrams(listOf("тор", "свет", "рот")) -> true
  */
-fun hasAnagrams(words: List<String>): Boolean {
-    val list = words.toMutableList()
-    var result = false
-    for (i in words) {
-        val setChars = i.toSet()
-        list.remove(i)
-        for (j in list) if (setChars == j.toSet()) {
-            result = true
-            break
-        } else continue
-    }
-    return result
-}
+fun hasAnagrams(words: List<String>): Boolean = TODO()
 
 /**
  * Сложная (5 баллов)
@@ -327,20 +287,7 @@ fun hasAnagrams(words: List<String>): Boolean {
  *          "GoodGnome" to setOf()
  *        )
  */
-fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>> {
-    val result = mutableMapOf<String, MutableSet<String>>()
-    val setOfNames1 = friends.keys
-    val setOfNames2 = mutableSetOf<String>()
-    var helpSet = mutableSetOf<String>()
-    for ((key, value) in friends) {
-        for ((key1, value1) in friends) {
-            for (i in value1) {
-                //if (key != i && key1 in key) result.add() // примерное условие
-            }
-        }
-    }
-    return result
-}
+fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>> = TODO()
 
 /**
  * Сложная (6 баллов)
