@@ -98,10 +98,7 @@ fun buildWordSet(text: List<String>): MutableSet<String> {
  */
 fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> {
     val resultMap = mutableMapOf<Int, MutableList<String>>()
-    for ((name, grade) in grades) {
-        if (grade in resultMap) resultMap[grade]!!.add(name)
-        else resultMap[grade] = mutableListOf(name)
-    }
+    for ((name, grade) in grades) resultMap.getOrPut(grade) { mutableListOf() }.add(name)
     return resultMap
 }
 
@@ -118,8 +115,7 @@ fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> {
 fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean {
     var isContain = true
     for ((key, value) in a) {
-        if (b.containsKey(key) && (b.containsValue(value))) continue
-        else {
+        if (!b.containsKey(key) || !b.containsValue(value)) {
             isContain = false
             break
         }
@@ -142,7 +138,7 @@ fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean {
  *     -> a changes to mutableMapOf() aka becomes empty
  */
 fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>) {
-    for ((key, value) in b) if (a.containsKey(key) && a[key] == value) a.remove(key) else continue
+    for ((key, value) in b) if (a.containsKey(key) && a[key] == value) a.remove(key)
 }
 
 /**
@@ -218,7 +214,8 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
  * Например:
  *   canBuildFrom(listOf('a', 'b', 'o'), "baobab") -> true
  */
-fun canBuildFrom(chars: List<Char>, word: String): Boolean = chars.toSet() == word.toSet()
+fun canBuildFrom(chars: List<Char>, word: String): Boolean = chars.toSet().containsAll(word.toSet())
+
 
 /**
  * Средняя (4 балла)

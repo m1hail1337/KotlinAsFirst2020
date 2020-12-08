@@ -163,11 +163,12 @@ fun collatzSteps(x: Int): Int {
  * минимальное число k, которое делится и на m и на n без остатка
  */
 fun lcm(m: Int, n: Int): Int {
-    val max = maxOf(m, n)
-    val min = minOf(m, n)
-    var k = 1
-    while (max * k % min != 0) k++
-    return k * max
+    var newM = m
+    var newN = n
+    while (newM != 0 && newN != 0)
+        if (newM > newN) newM %= newN
+        else newN %= newM
+    return m * n / (newM + newN) // Узнал об алгоритме Евклида и его зависимости к НОК
 }
 
 /**
@@ -188,7 +189,7 @@ fun isCoPrime(m: Int, n: Int): Boolean = lcm(m, n) == m * n
  */
 fun squareBetweenExists(m: Int, n: Int): Boolean {
     var result = false
-    for (i in m downTo 0) {
+    for (i in 0..sqrt(m.toDouble()).toInt()) {
         if (i * i in m..n) {
             result = true
             break
@@ -207,13 +208,13 @@ fun squareBetweenExists(m: Int, n: Int): Boolean {
 fun revert(n: Int): Int {
     var number = n
     var result = 0
-    var multiplier = 10.0.pow(digitNumber(n)).toInt()
-    while (number > 9) {
-        result += number % 10 * multiplier
+    var digit = 0
+    while (number > 0) {
+        digit = number % 10
         number /= 10
-        multiplier /= 10
+        result = result * 10 + digit
     }
-    return (result + number % 10 * multiplier) / 10
+    return result
 }
 
 /**
@@ -312,6 +313,7 @@ fun sequenceSolver(n: Int, isSquareSequence: Boolean): Int {
     }
     return number / 10.0.pow(count - n).toInt() % 10
 }
+
 fun squareSequenceDigit(n: Int): Int = sequenceSolver(n, true)
 
 /**

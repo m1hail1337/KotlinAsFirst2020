@@ -3,11 +3,9 @@
 package lesson4.task1
 
 import lesson1.task1.discriminant
-import lesson3.task1.digitNumber
 import lesson3.task1.minDivisor
-import lesson9.task2.sumNeighbours
-import kotlin.math.sqrt
 import kotlin.math.pow
+import kotlin.math.sqrt
 
 // Урок 4: списки
 // Максимальное количество баллов = 12
@@ -186,13 +184,12 @@ fun polynom(p: List<Int>, x: Int): Int {
  * Обратите внимание, что данная функция должна изменять содержание списка list, а не его копии.
  */
 fun accumulate(list: MutableList<Int>): MutableList<Int> {
-    if (list.isNotEmpty()) {
-        var sum = 0
-        for (i in list.indices) {
-            sum += list[i]
-            list[i] = sum
-        }
+    var sum = 0
+    for (i in list.indices) {
+        sum += list[i]
+        list[i] = sum
     }
+
     return list
 }
 
@@ -206,7 +203,7 @@ fun accumulate(list: MutableList<Int>): MutableList<Int> {
 fun factorize(n: Int): List<Int> {
     var newN = n
     val list = mutableListOf<Int>()
-    while (newN != 1) {
+    while (newN > 2) {
         list.add(minDivisor(newN))
         newN /= minDivisor(newN)
     }
