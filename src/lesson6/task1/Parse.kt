@@ -1,8 +1,9 @@
-@file:Suppress("UNUSED_PARAMETER", "ConvertCallChainIntoSequence")
+@file:Suppress("UNUSED_PARAMETER", "ConvertCallChainIntoSequence", "UNREACHABLE_CODE")
 
 package lesson6.task1
 
 import lesson2.task2.daysInMonth
+import java.util.NoSuchElementException
 
 // Урок 6: разбор строк, исключения
 // Максимальное количество баллов = 13
@@ -65,7 +66,7 @@ fun main() {
 }
 
 
-val mapOfMonth = mapOf(
+var mapOfMonth = mapOf(
     "января" to "01",
     "февраля" to "02",
     "марта" to "03",
@@ -93,16 +94,14 @@ val mapOfMonth = mapOf(
  */
 fun dateStrToDigit(str: String): String {
     val dateList = str.split(" ")
-    var day = dateList[0].toIntOrNull(-1)
-    var month = dateList[1]
-    var year = dateList[2].toIntOrNull(-1)
-    //try {
-       // month = mapOfMonth[month].toString()
-       // if (day > daysInMonth(month.toInt(), year))
-   // } catch (a: NumberFormatException) {
-       // return ""
-    //}
-    return String.format("%02d:%02d:%4d", day, month, year)
+    return if (dateList.size == 3) {
+        val day = dateList[0].toIntOrNull() ?: return ""
+        val month = mapOfMonth[dateList[1]] ?: return ""
+        val year = dateList[2].toIntOrNull() ?: return ""
+        if (day <= daysInMonth(month.toInt(), year))
+            String.format("%02d.%02d.%d", day, month.toInt(), year)
+        else ""
+    } else ""
 }
 
 /**
@@ -116,19 +115,16 @@ fun dateStrToDigit(str: String): String {
  * входными данными.
  */
 fun dateDigitToStr(digital: String): String {
-    val result = digital.split(".").toMutableList()
-    try {
-        result[0] = result[0].toInt().toString()
-        result[2].toInt()
-        if (result[0].toInt() > daysInMonth(result[1].toInt(), result[2].toInt()) || result.size != 3) return ""
-        mapOfMonth.map { it.value to it.key }.toMap()
-        result[1] = mapOfMonth.getValue(result[1])
-    } catch (a: NumberFormatException) {
-        return ""
-    } catch (b: IndexOutOfBoundsException) {
-        return ""
-    }
-    return result.joinToString(" ")
+    val dateList = digital.split(".").toMutableList()
+    mapOfMonth = mapOfMonth.map { it.value to it.key }.toMap()
+    return if (dateList.size == 3) {
+        val day = dateList[0].toIntOrNull() ?: return ""
+        val year = dateList[2].toIntOrNull() ?: return ""
+        val month = mapOfMonth[dateList[1]] ?: return ""
+        return if (day <= daysInMonth(dateList[1].toInt(), year)) {
+            String.format("%d $month %d", day, year)
+        } else ""
+    } else ""
 }
 
 
@@ -158,7 +154,16 @@ fun flattenPhoneNumber(phone: String): String = TODO()
  * Прочитать строку и вернуть максимальное присутствующее в ней число (717 в примере).
  * При нарушении формата входной строки или при отсутствии в ней чисел, вернуть -1.
  */
-fun bestLongJump(jumps: String): Int = TODO()
+fun bestLongJump(jumps: String): Int {
+    val jumpsList = jumps.split(" ")
+    var maxJump = -1
+    for (jump in jumpsList) {
+        if (jump.toIntOrNull() != null) {
+            if (jump.toInt() > maxJump) maxJump = jump.toInt()
+        } else if (jump != "%" && jump != "-") return -1
+    }
+    return maxJump
+}
 
 /**
  * Сложная (6 баллов)
