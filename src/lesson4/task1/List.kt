@@ -203,7 +203,7 @@ fun accumulate(list: MutableList<Int>): MutableList<Int> {
 fun factorize(n: Int): List<Int> {
     var newN = n
     val list = mutableListOf<Int>()
-    while (newN > 2) {
+    while (newN > 1) {
         list.add(minDivisor(newN))
         newN /= minDivisor(newN)
     }
@@ -287,38 +287,10 @@ fun decimal(digits: List<Int>, base: Int): Int {
  * (например, str.toInt(base)), запрещается.
  */
 fun decimalFromString(str: String, base: Int): Int {
-    val listLetters = listOf(
-        "a",
-        "b",
-        "c",
-        "d",
-        "e",
-        "f",
-        "g",
-        "h",
-        "i",
-        "j",
-        "k",
-        "l",
-        "m",
-        "n",
-        "o",
-        "p",
-        "q",
-        "r",
-        "s",
-        "t",
-        "u",
-        "v",
-        "w",
-        "x",
-        "y",
-        "z"
-    )
     val resultList = mutableListOf<Int>()
-    for (i in str) {
-        if (i.toString() in listLetters) resultList.add(listLetters.indexOf(i.toString()) + 10)
-        else resultList.add(i.toString().toInt())
+    for (i in str.indices) {
+        if (str[i] in 'a'..'z') resultList.add(str[i] - 'a' + 10)
+        else resultList.add(str[i] - '0')
     }
     return decimal(resultList, base)
 }
@@ -332,57 +304,8 @@ fun decimalFromString(str: String, base: Int): Int {
  * Например: 23 = XXIII, 44 = XLIV, 100 = C
  */
 
-fun roman(n: Int): String {
-    //val romanChars = listOf("I", "V", "X", "L", "C", "D", "M")
-    val ans = mutableListOf<String>()
-    fun constructor(k: Int, arg: String) {
-        for (i in 0 until k)
-            ans.add(ans.size, arg)
+fun roman(n: Int): String = TODO() //Задача видимо слишком сложная, решу ее потом, на досуге, сейчас сконцентрируюсь на решении более простых ради баллов
 
-    }
-
-    val m1 = n / 1000
-    constructor(m1, "M")
-    var m2 = n % 1000
-    if (m2 / 100 == 9) {
-        ans.add(ans.size, "CM")
-        m2 = -1
-    } else if (m2 / 100 == 4) {
-        ans.add(ans.size, "CM")
-        m2 = -1
-    }
-
-    val d1 = m2 / 500
-    constructor(d1, "D")
-    val d2 = m2 % 500
-    val c1 = d2 / 100
-    constructor(c1, "C")
-    var c2 = n % 100
-    if (c2 / 10 == 9) {
-        ans.add(ans.size, "XC")
-        c2 = -1
-    } else if (c2 / 10 == 4) {
-        ans.add(ans.size, "XL")
-        c2 = -1
-    }
-    val l1 = c2 / 50
-    constructor(l1, "L")
-    val l2 = c2 % 50
-    val x1 = l2 / 10
-    constructor(x1, "X")
-    var x2 = n % 10
-    if (x2 % 10 == 9) {
-        ans.add(ans.size, "IX")
-        x2 = -1
-    } else if (x2 % 10 == 4) {
-        ans.add(ans.size, "IV")
-        x2 = -1
-    }
-    val v1 = x2 / 5
-    constructor(v1, "V")
-    constructor(x2 % 5, "I")
-    return ans.joinToString("")
-}
 
 /**
  * Очень сложная (7 баллов)

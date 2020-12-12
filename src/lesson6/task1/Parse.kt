@@ -65,6 +65,21 @@ fun main() {
 }
 
 
+val mapOfMonth = mapOf(
+    "января" to "01",
+    "февраля" to "02",
+    "марта" to "03",
+    "апреля" to "04",
+    "мая" to "05",
+    "июня" to "06",
+    "июля" to "07",
+    "августа" to "08",
+    "сентября" to "09",
+    "октября" to "10",
+    "ноября" to "11",
+    "декабря" to "12"
+)
+
 /**
  * Средняя (4 балла)
  *
@@ -77,32 +92,17 @@ fun main() {
  * входными данными.
  */
 fun dateStrToDigit(str: String): String {
-    val result = str.split(" ").toMutableList()
-    try {
-        result[0] = twoDigitStr(result[0].toInt())
-        result[2].toInt()
-        val mapOfMonth = mapOf<String, String>(
-            "января" to "01",
-            "февраля" to "02",
-            "марта" to "03",
-            "апреля" to "04",
-            "мая" to "05",
-            "июня" to "06",
-            "июля" to "07",
-            "августа" to "08",
-            "сентября" to "09",
-            "октября" to "10",
-            "ноября" to "11",
-            "декабря" to "12"
-        )
-        if (mapOfMonth.containsKey(result[1])) result[1] = mapOfMonth[result[1]] ?: return ("")
-        if (result[0].toInt() > daysInMonth(result[1].toInt(), result[2].toInt()) || result.size != 3) return ""
-    } catch (a: NumberFormatException) {
-        return ""
-    } catch (b: IndexOutOfBoundsException) {
-        return ""
-    }
-    return result.joinToString(".")
+    val dateList = str.split(" ")
+    var day = dateList[0].toIntOrNull(-1)
+    var month = dateList[1]
+    var year = dateList[2].toIntOrNull(-1)
+    //try {
+       // month = mapOfMonth[month].toString()
+       // if (day > daysInMonth(month.toInt(), year))
+   // } catch (a: NumberFormatException) {
+       // return ""
+    //}
+    return String.format("%02d:%02d:%4d", day, month, year)
 }
 
 /**
@@ -121,21 +121,8 @@ fun dateDigitToStr(digital: String): String {
         result[0] = result[0].toInt().toString()
         result[2].toInt()
         if (result[0].toInt() > daysInMonth(result[1].toInt(), result[2].toInt()) || result.size != 3) return ""
-        val mapOfMonth = mapOf(
-            "января" to "01",
-            "февраля" to "02",
-            "марта" to "03",
-            "апреля" to "04",
-            "мая" to "05",
-            "июня" to "06",
-            "июля" to "07",
-            "августа" to "08",
-            "сентября" to "09",
-            "октября" to "10",
-            "ноября" to "11",
-            "декабря" to "12"
-        ).map { it.value to it.key }.toMap()
-        result[1] = mapOfMonth.getOrElse(result[1]) { return "" }
+        mapOfMonth.map { it.value to it.key }.toMap()
+        result[1] = mapOfMonth.getValue(result[1])
     } catch (a: NumberFormatException) {
         return ""
     } catch (b: IndexOutOfBoundsException) {
