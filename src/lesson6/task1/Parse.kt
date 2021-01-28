@@ -65,6 +65,15 @@ fun main() {
     }
 }
 
+fun isCorrect(dateList: List<String>, flag: Boolean): Boolean {
+    if (flag) mapOfMonth = mapOfMonth.map { it.value to it.key }.toMap()
+    return if (dateList.size == 3) {
+        dateList[0].toIntOrNull() ?: return false
+        dateList[2].toIntOrNull() ?: return false
+        if (!mapOfMonth.containsKey(dateList[1])) return false
+        else true
+    } else false
+}
 
 var mapOfMonth = mapOf(
     "января" to "01",
@@ -94,14 +103,16 @@ var mapOfMonth = mapOf(
  */
 fun dateStrToDigit(str: String): String {
     val dateList = str.split(" ")
-    return if (dateList.size == 3) {
-        val day = dateList[0].toIntOrNull() ?: return ""
-        val month = mapOfMonth[dateList[1]] ?: return ""
-        val year = dateList[2].toIntOrNull() ?: return ""
-        if (day <= daysInMonth(month.toInt(), year))
-            String.format("%02d.%02d.%d", day, month.toInt(), year)
-        else ""
-    } else ""
+    return if (isCorrect(dateList, false) &&
+        dateList[0].toInt() <= daysInMonth(mapOfMonth.getValue(dateList[1]).toInt(), dateList[2].toInt())
+    )
+        String.format(
+            "%02d.%02d.%d",
+            dateList[0].toInt(),
+            mapOfMonth.getValue(dateList[1]).toInt(),
+            dateList[2].toInt()
+        )
+    else ""
 }
 
 /**
@@ -115,16 +126,17 @@ fun dateStrToDigit(str: String): String {
  * входными данными.
  */
 fun dateDigitToStr(digital: String): String {
-    val dateList = digital.split(".").toMutableList()
+    val dateList = digital.split(".")
     mapOfMonth = mapOfMonth.map { it.value to it.key }.toMap()
-    return if (dateList.size == 3) {
-        val day = dateList[0].toIntOrNull() ?: return ""
-        val year = dateList[2].toIntOrNull() ?: return ""
-        val month = mapOfMonth[dateList[1]] ?: return ""
-        return if (day <= daysInMonth(dateList[1].toInt(), year)) {
-            String.format("%d $month %d", day, year)
-        } else ""
-    } else ""
+    return if (isCorrect(dateList, true) &&
+        dateList[0].toInt() <= daysInMonth(dateList[1].toInt(), dateList[2].toInt())
+    )
+        String.format(
+            "%02d.${mapOfMonth[dateList[1]]}.%d",
+            dateList[0].toInt(),
+            dateList[2].toInt()
+        )
+    else ""
 }
 
 

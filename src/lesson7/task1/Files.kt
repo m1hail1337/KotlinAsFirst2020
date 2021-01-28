@@ -77,14 +77,13 @@ fun deleteMarked(inputName: String, outputName: String) {
  */
 fun countSubstrings(inputName: String, substrings: List<String>): Map<String, Int> {
     val result = mutableMapOf<String, Int>()
-    for (line in File(inputName).readLines()) {
-        for (substring in substrings) {
-            val newSubstring = substring.toLowerCase()
-            if (Regex("""^$newSubstring$""") in line.toLowerCase()) {
-                result[substring] ?: result.put(substring, 0)
-                println(result)
+    for (substring in substrings) {
+        result[substring] = 0
+        val newSubstring = substring.toLowerCase()
+        for (line in File(inputName).readLines())
+            if (Regex(newSubstring) in line.toLowerCase()) {
+                //result[substring]!!++
             }
-        }
     }
     return result
 }
@@ -125,7 +124,23 @@ fun sibilants(inputName: String, outputName: String) {
  *
  */
 fun centerFile(inputName: String, outputName: String) {
-    TODO()
+    val writer = File(outputName).bufferedWriter()
+    var maxLength = -1
+    val listOfLines = mutableListOf<String>()
+    File(inputName).forEachLine { line ->
+        val newLine = line.trim()
+        listOfLines.add(newLine)
+        if (newLine.isNotEmpty()) {
+            if (newLine.length > maxLength) {
+                maxLength = newLine.length
+            }
+        }
+    }
+    for (line in listOfLines) {
+        writer.write(" ".repeat((maxLength - line.length) / 2) + line)
+        writer.newLine()
+    }
+    writer.close()
 }
 
 /**

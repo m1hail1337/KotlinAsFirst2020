@@ -190,13 +190,15 @@ fun isCoPrime(m: Int, n: Int): Boolean = lcm(m, n) == m * n
 
 fun squareBetweenExists(m: Int, n: Int): Boolean {
     var result = false
-    for (i in m..n) {   //Решил немного по-другому пути пойти,не понял что за границы перебора
-        if (i % sqrt(i.toDouble()) == 0.0) {
-            result = true
-            break
+    return if (m != 0) {
+        for (i in m..n) {   //Решил немного по-другому пути пойти,не понял что за границы перебора
+            if (i % sqrt(i.toDouble()) == 0.0) {
+                result = true
+                break
+            }
         }
-    }
-    return result
+        result
+    } else true
 }
 
 /**
