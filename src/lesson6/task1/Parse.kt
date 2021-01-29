@@ -65,29 +65,35 @@ fun main() {
     }
 }
 
-fun isCorrect(dateList: List<String>, flag: Boolean): Boolean {
-    if (flag) mapOfMonth = mapOfMonth.map { it.value to it.key }.toMap()
+fun isCorrect(dateList: List<String>): Boolean {
     return if (dateList.size == 3) {
         dateList[0].toIntOrNull() ?: return false
         dateList[2].toIntOrNull() ?: return false
-        if (!mapOfMonth.containsKey(dateList[1])) return false
-        else true
+        if (dateList[1] in listOfMonth)
+            dateList[0].toInt() <= daysInMonth(listOfMonth.indexOf(dateList[1] + 1), dateList[2].toInt())
+        else {
+            dateList[1].toIntOrNull() ?: return false
+            return (dateList[1].toInt() > 0); (dateList[0].toInt() <= daysInMonth(
+                dateList[1].toInt(),
+                dateList[2].toInt()
+            ))
+        }
     } else false
 }
 
-var mapOfMonth = mapOf(
-    "января" to "01",
-    "февраля" to "02",
-    "марта" to "03",
-    "апреля" to "04",
-    "мая" to "05",
-    "июня" to "06",
-    "июля" to "07",
-    "августа" to "08",
-    "сентября" to "09",
-    "октября" to "10",
-    "ноября" to "11",
-    "декабря" to "12"
+var listOfMonth = listOf(
+    "января",
+    "февраля",
+    "марта",
+    "апреля",      // Попробую вместо map'а со строками типа "января" to "01" использовать индексы
+    "мая",
+    "июня",
+    "июля",
+    "августа",
+    "сентября",
+    "октября",
+    "ноября",
+    "декабря"
 )
 
 /**
@@ -103,16 +109,14 @@ var mapOfMonth = mapOf(
  */
 fun dateStrToDigit(str: String): String {
     val dateList = str.split(" ")
-    return if (isCorrect(dateList, false) &&
-        dateList[0].toInt() <= daysInMonth(mapOfMonth.getValue(dateList[1]).toInt(), dateList[2].toInt())
-    )
+    return if (isCorrect(dateList)) {
         String.format(
             "%02d.%02d.%d",
             dateList[0].toInt(),
-            mapOfMonth.getValue(dateList[1]).toInt(),
+            listOfMonth.indexOf(dateList[1]) + 1,
             dateList[2].toInt()
         )
-    else ""
+    } else ""
 }
 
 /**
@@ -127,12 +131,9 @@ fun dateStrToDigit(str: String): String {
  */
 fun dateDigitToStr(digital: String): String {
     val dateList = digital.split(".")
-    mapOfMonth = mapOfMonth.map { it.value to it.key }.toMap()
-    return if (isCorrect(dateList, true) &&
-        dateList[0].toInt() <= daysInMonth(dateList[1].toInt(), dateList[2].toInt())
-    )
+    return if (isCorrect(dateList))
         String.format(
-            "%02d.${mapOfMonth[dateList[1]]}.%d",
+            "%d ${listOfMonth[dateList[1].toInt() - 1]} %d",
             dateList[0].toInt(),
             dateList[2].toInt()
         )
