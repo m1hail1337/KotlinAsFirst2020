@@ -76,12 +76,15 @@ fun deleteMarked(inputName: String, outputName: String) {
  *
  */
 fun countSubstrings(inputName: String, substrings: List<String>): Map<String, Int> {
+    var c = 0
     val result = mutableMapOf<String, Int>()
-    val textList = File(inputName).readText().toLowerCase().split(" ")
+    val text = File(inputName).readText().toLowerCase()
     for (substring in substrings) {
-        if (!result.contains(substring)) result[substring] = 0
-        for (word in textList)
-            if (substring.toLowerCase() in word) result[substring]!! + 1
+        for (word in text.split(" "))                //Хотел сделать через StringUtils.countMatches тк была проблема, что все считает нормально кроме "е"
+            for (i in word.indices)                              // то есть не учитывало, что в слове substring может повториться несколько раз,
+                if (word.startsWith(substring.toLowerCase(),i)) c++ // не стал разбираться (похоже у меня не скачана нужная библиотека)
+        result[substring] = c
+        c = 0
     }
     return result
 }

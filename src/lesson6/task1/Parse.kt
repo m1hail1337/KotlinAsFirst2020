@@ -73,7 +73,7 @@ fun isCorrect(dateList: List<String>): Boolean {
             dateList[0].toInt() <= daysInMonth(listOfMonth.indexOf(dateList[1] + 1), dateList[2].toInt())
         else {
             dateList[1].toIntOrNull() ?: return false
-            return (dateList[1].toInt() > 0); (dateList[0].toInt() <= daysInMonth(
+            return (dateList[1].toInt() > 0) && (dateList[0].toInt() <= daysInMonth(
                 dateList[1].toInt(),
                 dateList[2].toInt()
             ))
