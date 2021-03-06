@@ -3,104 +3,129 @@ package lesson11.task1
 import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.Tag
+
 
 class PolynomTest {
 
-    private fun assertApproxEquals(expected: Polynom, actual: Polynom, eps: Double) {
-        assertEquals(expected.degree(), actual.degree())
-        for (i in 0..expected.degree()) {
-            assertEquals(expected.coeff(i), actual.coeff(i), eps)
-        }
+    @Test
+    fun equalize() {
+        assertEquals(
+            listOf(Polynom(0.0, 3.0, 4.0, -8.0), Polynom(5.0, 2.0, 1.0, 7.0)),
+            Polynom(3.0, 4.0, -8.0).equalize(Polynom(5.0, 2.0, 1.0, 7.0))
+        )
+        assertEquals(
+            listOf(Polynom(4.0, 3.0, 4.0, -8.0), Polynom(5.0, 2.0, 1.0, 7.0)),
+            Polynom(4.0, 3.0, 4.0, -8.0).equalize(Polynom(5.0, 2.0, 1.0, 7.0))
+        )
+        assertEquals(
+            listOf(Polynom(4.0, 3.0, 4.0, -8.0), Polynom(0.0, 2.0, 1.0, 7.0)),
+            Polynom(4.0, 3.0, 4.0, -8.0).equalize(Polynom(2.0, 1.0, 7.0))
+        )
+        assertEquals(
+            listOf(Polynom(0.0, 1.0, 3.0, 2.0), Polynom(1.0, -2.0, -1.0, 4.0)),
+            Polynom(1.0, 3.0, 2.0).equalize(Polynom(1.0, -2.0, -1.0, 4.0))
+        )
+        assertEquals(
+            listOf(Polynom(1.0, -2.0, -1.0, 4.0), Polynom(0.0, 1.0, 3.0, 2.0)),
+            Polynom(1.0, -2.0, -1.0, 4.0).equalize(Polynom(1.0, 3.0, 2.0))
+        )
     }
 
     @Test
-    @Tag("4")
+    fun coeff() {
+        assertEquals(3.0, Polynom(1.0, 3.0, 2.0).coeff(1))
+        assertEquals(2.0, Polynom(1.0, -3.0, -4.0, 2.0).coeff(0))
+        assertEquals(-1.0, Polynom(1.0, -1.0, 2.0, 6.0).coeff(2))
+        assertEquals(1.0, Polynom(1.0, 1.0, -5.0, -3.0, 10.0, 8.0).coeff(5))
+    }
+
+    @Test
     fun getValue() {
-        val p = Polynom(1.0, 3.0, 2.0)
-        assertEquals(42.0, p.getValue(5.0), 1e-10)
+        assertEquals(42.0, Polynom(1.0, 3.0, 2.0).getValue(5.0), 1e-10)
+        assertEquals(10.0, Polynom(1.0, 2.0, 2.0).getValue(2.0), 1e-10)
+        assertEquals(34.0, Polynom(1.0, -1.0, 6.0, -2.0).getValue(3.0), 1e-10)
     }
 
     @Test
-    @Tag("4")
     fun degree() {
-        val p = Polynom(1.0, 1.0, 1.0)
-        assertEquals(2, p.degree())
-        val q = Polynom(0.0)
-        assertEquals(0, q.degree())
-        val r = Polynom(0.0, 1.0, 2.0)
-        assertEquals(1, r.degree())
+        assertEquals(2, Polynom(0.0, 2.0, 1.0, 7.0).degree())
+        assertEquals(3, Polynom(4.0, 2.0, 1.0, 7.0).degree())
+        assertEquals(0, Polynom(0.0, 0.0, 0.0, 7.0).degree())
+        assertEquals(0, Polynom(0.0, 0.0, 0.0, 0.0).degree())
     }
 
+
     @Test
-    @Tag("4")
     fun plus() {
-        val p1 = Polynom(1.0, -2.0, -1.0, 4.0)
-        val p2 = Polynom(1.0, 3.0, 2.0)
-        val r = Polynom(1.0, -1.0, 2.0, 6.0)
-        assertApproxEquals(r, p1 + p2, 1e-10)
-        assertApproxEquals(r, p2 + p1, 1e-10)
+        assertEquals(Polynom(1.0, -1.0, 2.0, 6.0), Polynom(1.0, -2.0, -1.0, 4.0).plus(Polynom(1.0, 3.0, 2.0)))
+        assertEquals(Polynom(1.0, -1.0, 2.0, 6.0), Polynom(1.0, 3.0, 2.0).plus(Polynom(1.0, -2.0, -1.0, 4.0)))
+        assertEquals(Polynom(0.0), Polynom(0.0, 3.0, 4.0, -8.0).plus(Polynom(0.0, -3.0, -4.0, 8.0)))
+        assertEquals(Polynom(-1.0, 2.0, 1.0, -4.0), Polynom(-1.0, 2.0, 1.0, -4.0).plus(Polynom(0.0)))
     }
 
     @Test
-    @Tag("4")
-    operator fun unaryMinus() {
-        val p = Polynom(1.0, -1.0, 2.0)
-        val r = Polynom(-1.0, 1.0, -2.0)
-        assertApproxEquals(r, -p, 1e-11)
+    fun unaryMinus() {
+        assertEquals(Polynom(-1.0, 2.0, 1.0, -4.0), Polynom(1.0, -2.0, -1.0, 4.0).unaryMinus())
+        assertEquals(Polynom(-5.0, -2.0, -1.0, -7.0), Polynom(5.0, 2.0, 1.0, 7.0).unaryMinus())
+        assertEquals(Polynom(-0.0, 2.0, 1.0, 7.0), Polynom(0.0, -2.0, -1.0, -7.0).unaryMinus())
     }
 
+
     @Test
-    @Tag("4")
     fun minus() {
-        val p1 = Polynom(1.0, -2.0, -1.0, 4.0)
-        val p2 = Polynom(1.0, 3.0, 2.0)
-        val r = Polynom(1.0, -3.0, -4.0, 2.0)
-        assertApproxEquals(r, p1 - p2, 1e-10)
-        assertApproxEquals(-r, p2 - p1, 1e-10)
+        assertEquals(Polynom(1.0, -3.0, -4.0, 2.0), Polynom(1.0, -2.0, -1.0, 4.0).minus(Polynom(1.0, 3.0, 2.0)))
+        assertEquals(
+            Polynom(0.0),
+            Polynom(1.0, 1.0, -5.0, -3.0, 10.0, 8.0).minus(Polynom(1.0, 1.0, -5.0, -3.0, 10.0, 8.0))
+        )
+        assertEquals(Polynom(2.0, 0.0, 2.0, 0.0), Polynom(1.0, 2.0, 5.0, 0.0).minus(Polynom(-1.0, 2.0, 3.0, 0.0)))
     }
 
     @Test
-    @Tag("6")
     fun times() {
-        val p1 = Polynom(1.0, -2.0, -1.0, 4.0)
-        val p2 = Polynom(1.0, 3.0, 2.0)
-        val r = Polynom(1.0, 1.0, -5.0, -3.0, 10.0, 8.0)
-        assertApproxEquals(r, p1 * p2, 1e-10)
-        assertApproxEquals(r, p2 * p1, 1e-10)
+        assertEquals(
+            Polynom(1.0, 1.0, -5.0, -3.0, 10.0, 8.0),
+            Polynom(1.0, -2.0, -1.0, 4.0).times(Polynom(1.0, 3.0, 2.0))
+        )
+        assertEquals(
+            Polynom(1.0, 1.0, -5.0, -3.0, 10.0, 8.0),
+            Polynom(1.0, 3.0, 2.0).times(Polynom(1.0, -2.0, -1.0, 4.0))
+        )
+        assertEquals(Polynom(0.0), Polynom(1.0, 2.0, 5.0).times(Polynom(0.0)))
     }
 
     @Test
-    @Tag("8")
     fun div() {
-        val p1 = Polynom(1.0, -2.0, -1.0, 4.0)
-        val p2 = Polynom(1.0, 3.0, 2.0)
-        val r = Polynom(1.0, -5.0)
-        assertApproxEquals(r, p1 / p2, 1e-10)
-        assertApproxEquals(Polynom(1.0, 2.0), Polynom(2.0, 4.0) / Polynom(0.0, 2.0), 1e-10)
+        assertEquals(Polynom(1.0, -5.0), Polynom(1.0, -2.0, -1.0, 4.0).div(Polynom(1.0, 3.0, 2.0)))
+        assertEquals(Polynom(1.0, 2.0, 5.0), Polynom(1.0, 2.0, 5.0, 0.0).div(Polynom(1.0, 0.0)))
+        assertEquals(Polynom(1.0), Polynom(1.0, -1.0, 2.0, 6.0).div(Polynom(1.0, -1.0, 2.0, 6.0)))
     }
 
     @Test
-    @Tag("8")
     fun rem() {
-        val p1 = Polynom(1.0, -2.0, -1.0, 4.0)
-        val p2 = Polynom(1.0, 3.0, 2.0)
-        val r = Polynom(1.0, -5.0)
-        val q = Polynom(12.0, 14.0)
-        assertApproxEquals(q, p1 % p2, 1e-10)
-        assertApproxEquals(p1, p2 * r + q, 1e-10)
+        assertEquals(Polynom(12.0, 14.0), Polynom(1.0, -2.0, -1.0, 4.0).rem(Polynom(1.0, 3.0, 2.0)))
+        assertEquals(Polynom(0.0), Polynom(3.0, 21.0, 9.0, 6.0).rem(Polynom(1.0, 7.0, 3.0, 2.0)))
+        assertEquals(
+            Polynom(-3.0, 10.0, 8.0),
+            Polynom(1.0, 1.0, -5.0, -3.0, 10.0, 8.0).rem(Polynom(1.0, 1.0, -5.0, 0.0, 0.0, 0.0))
+        )
+
     }
 
     @Test
-    @Tag("4")
     fun equals() {
-        assertEquals(Polynom(1.0, 2.0, 3.0), Polynom(1.0, 2.0, 3.0))
-        assertEquals(Polynom(0.0, 2.0, 3.0), Polynom(2.0, 3.0))
+        assertTrue(Polynom(1.0, 2.0, 3.0).equals(Polynom(1.0, 2.0, 3.0)))
+        assertTrue(Polynom(0.0, 2.0, 3.0).equals(Polynom(2.0, 3.0)))
+        assertFalse(Polynom(2.0, 0.0, 3.0).equals(Polynom(2.0, 3.0)))
+        assertFalse(Polynom(-2.0, 3.0).equals(Polynom(2.0, 3.0)))
     }
 
+
     @Test
-    @Tag("6")
-    fun hashCodeTest() {
-        assertEquals(Polynom(1.0, 2.0, 3.0).hashCode(), Polynom(1.0, 2.0, 3.0).hashCode())
+    fun output() {
+        assertEquals("2x^2+3x-8", Polynom(2.0, 3.0, -8.0).output())
+        assertEquals("2x^2-8", Polynom(2.0, 0.0, -8.0).output())
+        assertEquals("Empty Polynom", Polynom(0.0, 0.0, 0.0, 0.0).output())
     }
+
 }
